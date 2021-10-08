@@ -21,4 +21,26 @@ trash_wheel_data=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx")
 trash_wheel_data= janitor::clean_names(trash_wheel_data)
 trash_wheel_data
 ```
+#Omit some missing data
+```{r}
+trash_wheel_data_missing_values=drop_na(trash_wheel_data, dumpster)
+#Need to remove the notes column as well
+```
+#Rounding sports balls
+```{r}
+trash_wheel_sports_balls=mutate(trash_wheel_data_missing_values,sports_balls= round(sports_balls))
+```
+
+#Reading Precipitation in 2019 and cleaning it
+```{r}
+Precip_2019= read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2019 Precipitation")
+Precip_2019=janitor::clean_names(Precip_2019)
+```
+
+#Reading Precipitation in 2018 and cleaning it
+```{r}
+Precip_2018=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "2018 Precipitation")
+Precip_2018=janitor::clean_names(Precip_2018)
+
+```
 
