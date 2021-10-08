@@ -84,6 +84,7 @@ pols_month_df=
   janitor::clean_names() %>% 
   separate(mon, into = c("year", "month", "day")) %>% 
   mutate(month= as.numeric(month)) %>% 
+  mutate(year= as.numeric(year)) %>% 
   mutate(month=month.name[month]) %>% 
   pivot_longer(
     cols = starts_with("prez"),
@@ -93,7 +94,6 @@ pols_month_df=
   select(-day)
 
 pols_month_df
-view(pols_month_df)
 ```
 #Uploading and cleaning snp data
 
@@ -108,7 +108,9 @@ snp_df=
   mutate(month= as.numeric(month)) %>% 
   mutate(month=month.name[month]) %>% 
   arrange(year,month) %>% 
-  relocate(year,month)
+  relocate(year,month) %>% 
+  select(-day)
+
   
 snp_df
 ```
@@ -126,5 +128,12 @@ unemployment_df=
                        `sep`=9,`oct`=10,`nov`=11,`dec`=12 )) %>% 
   mutate(month=month.name[month])
 unemployment_df
+```
+
+#Joining data of snp and pols
+```{r}
+snp_pols_df=
+  left_join(snp_df,pols_month_df, by=c("year", "month"))
+snp_pols_df
 ```
 
