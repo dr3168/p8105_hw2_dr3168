@@ -17,43 +17,52 @@ library(readxl)
 
 #Loading Mr.Trash Wheel Data and Cleaning it
 ```{r}
-trash_wheel_data=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx")
+trash_wheel_data=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx", range =cell_cols("A:N"))
 trash_wheel_data= janitor::clean_names(trash_wheel_data)
 trash_wheel_data
 ```
 #Omit some missing data
 ```{r}
 trash_wheel_data_missing_values=drop_na(trash_wheel_data, dumpster)
-#Need to remove the notes column as well
+trash_wheel_data_missing_values
 ```
-#Rounding sports balls
+#Rounding sports balls and finding the median
 ```{r}
 trash_wheel_sports_balls=mutate(trash_wheel_data_missing_values,sports_balls= round(sports_balls))
+trash_wheel_sports_balls= as.numeric(trash_wheel_sports_balls %>%pull(sports_balls))
+median(trash_wheel_sports_balls)
 ```
 
 #Reading Precipitation in 2019 and cleaning it
 ```{r}
 Precip_2019= read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2019 Precipitation")
 Precip_2019=janitor::clean_names(Precip_2019)
+Precip_2019=select(Precip_2019,month=precipitation_in, precipitation_in= x2 )
+
+Precip_2019
 ```
 
 #Reading Precipitation in 2018 and cleaning it
 ```{r}
 Precip_2018=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "2018 Precipitation")
 Precip_2018=janitor::clean_names(Precip_2018)
-```
+Precip_2018=select(Precip_2018,month=precipitation_in, precipitation_in= x2 )
 
+Precip_2018
+```
 #Ommitting missing data
 ```{r}
-Precip_2019_Missing= drop_na(Precip_2019)
+Precip_2019_Missing_First_Row=filter(Precip_2019, !month %in% c("Month"))
+Precip_2019_Missing= drop_na(Precip_2019_Missing_First_Row)
 Precip_2019_Missing
-Precip_2018_Missing= drop_na(Precip_2018)
+Precip_2018_Missing_First_Row=filter(Precip_2018, !month %in% c("Month"))
+Precip_2018_Missing= drop_na(Precip_2018_Missing_First_Row)
 Precip_2018_Missing
 ```
 
 #Adding a variable
 ```{r}
-Precip_2019_year=mutate(Precip_2019_Missing, year=2019)
+Precip_2019_year=mutate(Precip_2019_Missing, year=2019, )
 Precip_2019_year
 Precip_2018_year=mutate(Precip_2018_Missing, year=2018)
 Precip_2018_year
@@ -61,9 +70,10 @@ Precip_2018_year
 
 #Combining both data sets
 ```{r}
-Precipitation_2019_2018=combine(Precip_2019_year, Precip_2018_year,)
+Precipitation_2019_2018=combine(Precip_2019_year, Precip_2018_year)
 Precipitation_2019_2018
 ```
 
 
+#The number of data in the precipation data set is 20 and one of they key variables is the total precipiation per month. The total precipiation data for the year 2018...In the Mr. Trash Wheel data, the the number of obervations were 406 with 14 variables. These variables ranged from weight of trash in tons to volume of the trash to the amount of sport balls. The median number of sports balls is 8.
 
