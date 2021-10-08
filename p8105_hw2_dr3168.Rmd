@@ -17,7 +17,7 @@ library(readxl)
 
 #Loading Mr.Trash Wheel Data and Cleaning it
 ```{r}
-trash_wheel_data=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx", range =cell_cols("A:N"))
+trash_wheel_data=read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "Mr. Trash Wheel", range =cell_cols("A:N"))
 trash_wheel_data= janitor::clean_names(trash_wheel_data)
 trash_wheel_data
 ```
@@ -35,34 +35,28 @@ median(trash_wheel_sports_balls)
 
 #Reading Precipitation in 2019 and cleaning it
 ```{r}
-Precip_2019= read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx",sheet = "2019 Precipitation")
+Precip_2019= read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "2019 Precipitation", range="A2:B14")
 Precip_2019=janitor::clean_names(Precip_2019)
-Precip_2019=select(Precip_2019,month=precipitation_in, precipitation_in= x2 )
-
 Precip_2019
 ```
 
 #Reading Precipitation in 2018 and cleaning it
 ```{r}
-Precip_2018=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "2018 Precipitation")
+Precip_2018=read_excel("Trash-Wheel-Collection-Totals-7-2020-2.xlsx", sheet = "2018 Precipitation", range="A2:B14")
 Precip_2018=janitor::clean_names(Precip_2018)
-Precip_2018=select(Precip_2018,month=precipitation_in, precipitation_in= x2 )
-
 Precip_2018
 ```
 #Ommitting missing data
 ```{r}
-Precip_2019_Missing_First_Row=filter(Precip_2019, !month %in% c("Month"))
-Precip_2019_Missing= drop_na(Precip_2019_Missing_First_Row)
+Precip_2019_Missing= drop_na(Precip_2019)
 Precip_2019_Missing
-Precip_2018_Missing_First_Row=filter(Precip_2018, !month %in% c("Month"))
-Precip_2018_Missing= drop_na(Precip_2018_Missing_First_Row)
+Precip_2018_Missing= drop_na(Precip_2018)
 Precip_2018_Missing
 ```
 
 #Adding a variable
 ```{r}
-Precip_2019_year=mutate(Precip_2019_Missing, year=2019, )
+Precip_2019_year=mutate(Precip_2019_Missing, year=2019)
 Precip_2019_year
 Precip_2018_year=mutate(Precip_2018_Missing, year=2018)
 Precip_2018_year
@@ -70,10 +64,38 @@ Precip_2018_year
 
 #Combining both data sets
 ```{r}
-Precipitation_2019_2018=combine(Precip_2019_year, Precip_2018_year)
+Precipitation_2019_2018=full_join(Precip_2019_year, Precip_2018_year)
 Precipitation_2019_2018
 ```
 
+#Using month.name
+```{r}
+mutate(Precipitation_2019_2018, month=month.name[month])
+```
 
-#The number of data in the precipation data set is 20 and one of they key variables is the total precipiation per month. The total precipiation data for the year 2018...In the Mr. Trash Wheel data, the the number of obervations were 406 with 14 variables. These variables ranged from weight of trash in tons to volume of the trash to the amount of sport balls. The median number of sports balls is 8.
+
+#The number of observations in the precipation data set is 24 and one of they key variables is the total precipiation per month. The total precipiation data for the year 2018 is 70.33 inches. In the Mr. Trash Wheel data, the the number of obervations were 406 with 14 variables. These variables ranged from weight of trash in tons to volume of the trash to the amount of sport balls. The median number of sports balls is 8.
+
+
+#Uploading and cleaning pols data
+```{r}
+pols_month_df= 
+  read.csv("fivethirtyeight_datasets/pols-month.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(mon, into = c("year", "month", "day")) %>% 
+  mutate(month= as.numeric(month)) %>% 
+  mutate(month=month.name[month]) %>% 
+  pivot_longer(
+    cols = starts_with("prez"),
+    names_to = "president",
+    names_prefix = "prez_",
+    values_to = "gop_dem") %>% 
+  select(-day)
+
+pols_month_df
+```
+
+
+```{r}
+```
 
