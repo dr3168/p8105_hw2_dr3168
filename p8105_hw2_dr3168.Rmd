@@ -94,6 +94,7 @@ pols_month_df=
   select(-day)
 
 pols_month_df
+view(pols_month_df)
 ```
 #Uploading and cleaning snp data
 
@@ -113,6 +114,7 @@ snp_df=
 
   
 snp_df
+view(snp_df)
 ```
 
 #Uploading and cleaning unemployment data
@@ -128,6 +130,7 @@ unemployment_df=
                        `sep`=9,`oct`=10,`nov`=11,`dec`=12 )) %>% 
   mutate(month=month.name[month])
 unemployment_df
+view(unemployment_df)
 ```
 
 #Joining data of snp and pols
@@ -137,3 +140,12 @@ snp_pols_df=
 snp_pols_df
 ```
 
+#Joining unemployment data to snp_pols_df
+```{r}
+all_data=
+  left_join(unemployment_df, snp_pols_df, by=c("year", "month"))
+all_data
+view(all_data)
+```
+
+#In the Pols_Month dataset, there were 1,634 observations and 10 variables. A key variable in this set was month and year. In addition to this, president was a key variable and the data shows weather he was republican or democrat based on the year. The range of years for this set was 1947 to 2015. For the Snp dataset, there were 787 observations and 3 variables. The key variables were month,year, and the closing values. The range of years were from 1950 to 2015.The last set, which is the unemployment data, had 816 observations and 3 variables. They key varaibles were year, month and precentage of unemployment. The year range is from 1948  to 2015. When the data were joint, the outcome had 1,602 observations and 12 variables. The year ranged from 1948 to 2015 and contained all the variables from the previous three data. This data set was joined based on two coloumns: year and month. There are a lot of NAs.
