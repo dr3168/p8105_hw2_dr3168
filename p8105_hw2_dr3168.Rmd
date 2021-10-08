@@ -80,7 +80,7 @@ mutate(Precipitation_2019_2018, month=month.name[month])
 #Uploading and cleaning pols data
 ```{r}
 pols_month_df= 
-  read.csv("fivethirtyeight_datasets/pols-month.csv") %>% 
+  read_csv("fivethirtyeight_datasets/pols-month.csv") %>% 
   janitor::clean_names() %>% 
   separate(mon, into = c("year", "month", "day")) %>% 
   mutate(month= as.numeric(month)) %>% 
@@ -93,9 +93,38 @@ pols_month_df=
   select(-day)
 
 pols_month_df
+view(pols_month_df)
 ```
-
+#Uploading and cleaning snp data
 
 ```{r}
+snp_df= 
+  read_csv("fivethirtyeight_datasets/snp.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(date=lubridate::mdy(date)) %>% 
+  separate(date, into = c("year", "month", "day")) %>%
+  mutate(year=as.numeric(year)) %>%
+  mutate(year=ifelse(year>2021,year-100, year)) %>% 
+  mutate(month= as.numeric(month)) %>% 
+  mutate(month=month.name[month]) %>% 
+  arrange(year,month) %>% 
+  relocate(year,month)
+  
+snp_df
+```
+
+#Uploading and cleaning unemployment data
+```{r}
+unemployment_df= 
+  read_csv("fivethirtyeight_datasets/unemployment.csv") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(jan:dec,
+    names_to="month",
+    values_to="rate") %>% 
+  mutate(month= recode(month,`jan`=1, `feb`=2,`mar`=3,`apr`=4,
+                       `may`=5,`jun`=6,`jul`=7,`aug`=8,
+                       `sep`=9,`oct`=10,`nov`=11,`dec`=12 )) %>% 
+  mutate(month=month.name[month])
+unemployment_df
 ```
 
