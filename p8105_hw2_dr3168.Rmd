@@ -59,4 +59,11 @@ Precip_2018_year=mutate(Precip_2018_Missing, year=2018)
 Precip_2018_year
 ```
 
+#Combining both data sets
+```{r}
+Precipitation_2019_2018=combine(Precip_2019_year, Precip_2018_year,)
+Precipitation_2019_2018
+```
+
+
 
