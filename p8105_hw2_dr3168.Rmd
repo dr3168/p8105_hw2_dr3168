@@ -41,6 +41,22 @@ Precip_2019=janitor::clean_names(Precip_2019)
 ```{r}
 Precip_2018=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx", sheet = "2018 Precipitation")
 Precip_2018=janitor::clean_names(Precip_2018)
-
 ```
+
+#Ommitting missing data
+```{r}
+Precip_2019_Missing= drop_na(Precip_2019)
+Precip_2019_Missing
+Precip_2018_Missing= drop_na(Precip_2018)
+Precip_2018_Missing
+```
+
+#Adding a variable
+```{r}
+Precip_2019_year=mutate(Precip_2019_Missing, year=2019)
+Precip_2019_year
+Precip_2018_year=mutate(Precip_2018_Missing, year=2018)
+Precip_2018_year
+```
+
 
