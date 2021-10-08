@@ -1,0 +1,24 @@
+---
+title: "p8105_hw2_dr3168"
+author: "Daniela Rochez"
+date: "10/8/2021"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+---
+
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+#Loading Mr.Trash Wheel Data and Cleaning it
+```{r}
+trash_wheel_data=read_excel("Trash-Wheel-Collection-Totals-8-6-19.xlsx")
+trash_wheel_data= janitor::clean_names(trash_wheel_data)
+trash_wheel_data
+```
+
