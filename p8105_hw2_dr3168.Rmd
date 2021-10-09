@@ -177,4 +177,33 @@ olivia_name_df=
 olivia_name_df
 view(olivia_name_df)
 ```
+#Creating table for most popular name amongst male kids
+```{r}
+male_children_name_df=
+  Popular_Baby_Names_df %>% 
+  filter(gender=="male") %>% 
+  select(-count) %>%
+  pivot_wider(
+    names_from = "year_of_birth",
+    values_from= "rank"
+  )
+male_children_name_df
+```
+#Creating white male kids data set
+```{r}
+white_male_kids_2016=
+  Popular_Baby_Names_df %>% 
+  filter(gender=="male") %>% 
+  filter(ethnicity=="white non hispanic") %>% 
+  filter(year_of_birth==2016)
+white_male_kids_2016
+```
+
+#Making a scatterplot
+```{r}
+plot_white_male_kids_2016=
+  ggplot(white_male_kids_2016, aes(x = rank, y = count, ))+geom_point(color="turquoise3")
+plot_white_male_kids_2016
+```
+
 
