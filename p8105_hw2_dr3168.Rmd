@@ -156,9 +156,25 @@ Popular_Baby_Names_df =
   read_csv("Popular_Baby_Names.csv") %>% 
    janitor::clean_names() %>% 
   mutate(childs_first_name=str_to_lower(childs_first_name), gender=str_to_lower(gender), ethnicity=str_to_lower(ethnicity)) %>% 
+  mutate(ethnicity=(recode(ethnicity, `asian and paci`= "asian and pacific islander", `black non hisp`= "black non hispanic", `white non hisp`="white non hispanic"))) %>% 
   distinct()
 Popular_Baby_Names_df
 view(Popular_Baby_Names_df)
  
+```
+#Creating table for Olivia name
+```{r}
+olivia_name_df=
+  Popular_Baby_Names_df %>% 
+  filter(childs_first_name=="olivia") %>% 
+  select(-count) %>%
+  select(-gender) %>% 
+  pivot_wider(
+    names_from = "year_of_birth",
+    values_from= "rank"
+  )
+
+olivia_name_df
+view(olivia_name_df)
 ```
 
